@@ -1,172 +1,190 @@
-# Phase 3 CLI+ORM Project Template
+# Mnyama Collector CLI
 
-## Learning Goals
-
-- Discuss the basic directory structure of a CLI.
-- Outline the first steps in building a CLI.
+**Mnyama Collector** is a Python **Command-Line Interface (CLI)** app for managing wildlife data — animals, species, and habitats — in a structured way.
+It combines a local **SQLite database (SQLAlchemy + Alembic)** with **AI-powered image generation** so you can **collect, visualize, and manage virtual creatures**.
 
 ---
 
-## Introduction
+## Features
 
-You now have a basic idea of what constitutes a CLI. Fork and clone this lesson
-for a project template for your CLI.
+* **Creature Management**
 
-Take a look at the directory structure:
+  * Add, update, delete, and list creatures
+  * Assign species and habitats
+  * Track relationships between them
 
-```console
-.
+* **Habitat Management**
+
+  * Define habitats (e.g. Savanna, Forest, Ocean)
+  * Generate habitat reports
+
+* **Species Management**
+
+  * Store species with scientific names
+  * Attach traits and classifications
+
+* **AI Image Generation**
+
+  * Generate creature or habitat images using free APIs:
+
+    * [Pollinations.ai](https://pollinations.ai/) (no signup)
+    * [DeepAI](https://deepai.org/) (free tier)
+    * [Hugging Face](https://huggingface.co/) (free tier)
+  * Store generated image URLs in the database
+
+* **Database Persistence**
+
+  * SQLite backend with **SQLAlchemy ORM**
+  * **Alembic** migrations for schema changes
+
+* **Interactive CLI**
+
+  * Menu-based interface
+  * Reports & statistics
+
+---
+
+## Project Structure
+
+```
+Mnyama-Collector-CLI/
+├── .env
+├── .gitignore
 ├── Pipfile
 ├── Pipfile.lock
 ├── README.md
-└── lib
-    ├── models
-    │   ├── __init__.py
-    │   └── model_1.py
+└── lib/
+    ├── alembic.ini
     ├── cli.py
+    ├── creatures.db
     ├── debug.py
-    └── helpers.py
-```
+    ├── helpers.py
+    ├── setup_apis.py
+    ├── creature_images/
+    ├── migrations/
+    │   └── env.py
+    └── models/
+        ├── __init__.py
+        └── models.py
 
-Note: The directory also includes two files named `CONTRIBUTING.md` and
-`LICENSE.md` that are specific to Flatiron's curriculum. You can disregard or
-delete the files if you want.
+```
 
 ---
 
-## Generating Your Environment
+## Installation & Setup
 
-You might have noticed in the file structure- there's already a Pipfile!
+Follow these steps to set up and run **Mnyama Collector CLI** on your local machine:
 
-Install any additional dependencies you know you'll need for your project by
-adding them to the `Pipfile`. Then run the commands:
+### 1. Clone the Repository
 
-```console
+```bash
+git clone <your-repo-link>
+cd Mnyama-Collector-CLI
+```
+
+### 2. Set Up Virtual Environment
+
+Make sure you have **Pipenv** installed. Then run:
+
+```bash
 pipenv install
 pipenv shell
 ```
 
----
+### 3. Configure Environment Variables
 
-## Generating Your CLI
+Create a `.env` file in the **project root** and add your API keys (optional for image generation):
 
-A CLI is, simply put, an interactive script and prompts the user and performs
-operations based on user input.
-
-The project template has a sample CLI in `lib/cli.py` that looks like this:
-
-```py
-# lib/cli.py
-
-from helpers import (
-    exit_program,
-    helper_1
-)
-
-
-def main():
-    while True:
-        menu()
-        choice = input("> ")
-        if choice == "0":
-            exit_program()
-        elif choice == "1":
-            helper_1()
-        else:
-            print("Invalid choice")
-
-
-def menu():
-    print("Please select an option:")
-    print("0. Exit the program")
-    print("1. Some useful function")
-
-
-if __name__ == "__main__":
-    main()
+```bash
+DEEPAI_API_KEY=your_deepai_key_here
+HUGGING_FACE_API_KEY=your_huggingface_key_here
 ```
 
-The helper functions are located in `lib/helpers.py`:
+### 4. Database Setup (SQLite + Alembic)
 
-```py
-# lib/helpers.py
+Initialize and apply migrations to create/update the database schema:
 
-def helper_1():
-    print("Performing useful function#1.")
-
-
-def exit_program():
-    print("Goodbye!")
-    exit()
+```bash
+cd lib
+alembic upgrade head
 ```
 
-You can run the template CLI with `python lib/cli.py`, or include the shebang
-and make it executable with `chmod +x`. The template CLI will ask for input, do
-some work, and accomplish some sort of task.
+This will create/update `creatures.db` inside the **lib** folder.
 
-Past that, CLIs can be whatever you'd like, as long as you follow the project
-requirements.
+### 5. Run the CLI
 
-Of course, you will update `lib/cli.py` with prompts that are appropriate for
-your application, and you will update `lib/helpers.py` to replace `helper_1()`
-with a useful function based on the specific problem domain you decide to
-implement, along with adding other helper functions to the module.
+From the **lib** folder, start the program with:
 
-In the `lib/models` folder, you should rename `model_1.py` with the name of a
-data model class from your specific problem domain, and add other classes to the
-folder as needed. The file `lib/models/__init__.py` has been initialized to
-create the necessary database constants. You need to add import statements to
-the various data model classes in order to use the database constants.
+```bash
+python cli.py
+```
 
-You are also welcome to implement a different module and directory structure.
-However, your project should be well organized, modular, and follow the design
-principal of separation of concerns, which means you should separate code
-related to:
+### 6. (Optional) Debug Mode
 
-- User interface
-- Data persistence
-- Problem domain rules and logic
+To explore and test features interactively, run:
+
+```bash
+python debug.py
+```
 
 ---
 
-## Updating README.md
 
-`README.md` is a Markdown file that should describe your project. You will
-replace the contents of this `README.md` file with a description of **your**
-actual project.
+## Image API Setup (Optional)
 
-Markdown is not a language that we cover in Flatiron's Software Engineering
-curriculum, but it's not a particularly difficult language to learn (if you've
-ever left a comment on Reddit, you might already know the basics). Refer to the
-cheat sheet in this assignments's resources for a basic guide to Markdown.
+To enable AI image generation:
 
-### What Goes into a README?
+Run the setup guide:
 
-This README serves as a template. Replace the contents of this file to describe
-the important files in your project and describe what they do. Each Python file
-that you edit should get at least a paragraph, and each function should be
-described with a sentence or two.
+```bash
+python lib/setup_apis.py
+```
 
-Describe your actual CLI script first, and with a good level of detail. The rest
-should be ordered by importance to the user. (Probably functions next, then
-models.)
+This will guide you to set up:
 
-Screenshots and links to resources that you used throughout are also useful to
-users and collaborators, but a little more syntactically complicated. Only add
-these in if you're feeling comfortable with Markdown.
+* **Pollinations.ai** (works without key)
+* **DeepAI** → `export DEEPAI_API_KEY="your-key"`
+* **HuggingFace** → `export HUGGING_FACE_API_KEY="your-key"`
 
 ---
 
-## Conclusion
+## Usage
 
-A lot of work goes into a good CLI, but it all relies on concepts that you've
-practiced quite a bit by now. Hopefully this template and guide will get you off
-to a good start with your Phase 3 Project.
+Start the CLI:
 
-Happy coding!
+```bash
+python lib/cli.py
+```
+
+Example workflow:
+
+1. Add a new **Species** (Lion)
+2. Add a new **Habitat** (Savanna)
+3. Add a **Creature** (Simba → species: Lion, habitat: Savanna)
+4. Generate an AI image for the creature
+5. View **Habitat Report** or **Species Report**
 
 ---
 
-## Resources
+## Development Notes
 
-- [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
+* ORM: SQLAlchemy
+* Migrations: Alembic
+* DB: SQLite (`creatures.db`)
+* APIs: Pollinations, DeepAI, HuggingFace
+
+---
+
+## Roadmap
+
+* [ ] Export reports as PDF/CSV
+* [ ] Add search/filter features
+* [ ] Offline image caching
+* [ ] Unit tests
+
+---
+
+## License
+
+MIT License © 2025 Mohamed Abdul
+
