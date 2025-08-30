@@ -5,6 +5,9 @@ It combines a local **SQLite database (SQLAlchemy + Alembic)** with **AI-powered
 
 ---
 
+## Project demo video
+[Demo Video](https://drive.google.com/file/d/1Jmc0_0dV5xmOWiJDq_MLK2qfsmco1BpK/view?usp=sharing)
+
 ## Features
 
 * **Creature Management**
